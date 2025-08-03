@@ -23,7 +23,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab, onAuth
   const { user, logout } = useAuth();
 
   const tabs = [
-    { id: 'landing', label: 'Reconfigure', icon: Home },
+    { id: 'reconfigure', label: 'Reconfigure', icon: Home },
     { id: 'roadmap', label: 'Roadmap', icon: Map },
     { id: 'progress', label: 'Progress', icon: BarChart3 },
     { id: 'applications', label: 'Applications', icon: FileText },

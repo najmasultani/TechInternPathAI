@@ -29,7 +29,8 @@ interface UserData {
 }
 
 function App() {
-  const [showLanding, setShowLanding] = useLocalStorage<boolean>('showLanding', true);
+  const [showLanding, setShowLanding] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [activeTab, setActiveTab] = useState('roadmap');
   const [showAuthModal, setShowAuthModal] = useState(false);
   const { user, loading } = useAuth();
@@ -112,20 +113,28 @@ function App() {
     
     // Hide landing page
     setShowLanding(false);
+    setShowOnboarding(false);
     
     // Switch to roadmap tab to show the generated content
     setActiveTab('roadmap');
   };
 
-  // Show landing page if user hasn't completed onboarding
-  if (showLanding) {
-    return <LandingPage onComplete={handleOnboardingComplete} />;
+  // Show landing page or onboarding
+  if (showLanding || showOnboarding) {
+    return (
+      <LandingPage 
+        onComplete={handleOnboardingComplete} 
+        onSignInClick={() => setShowAuthModal(true)}
+        showOnboarding={showOnboarding}
+      />
+    );
   }
 
   const renderActiveTab = () => {
     switch (activeTab) {
-      case 'landing':
-        return <LandingPage onComplete={handleOnboardingComplete} />;
+      case 'reconfigure':
+        setShowOnboarding(true);
+        return null;
       case 'roadmap':
         return <RoadmapSection phases={roadmapPhases} updatePhases={setRoadmapPhases} />;
       case 'progress':
