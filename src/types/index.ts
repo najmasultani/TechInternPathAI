@@ -43,6 +43,7 @@ export interface Resource {
   description: string;
   isBookmarked: boolean;
   isCustom?: boolean;
+  isFeatured?: boolean;
 }
 
 export interface Badge {

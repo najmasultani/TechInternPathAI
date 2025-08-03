@@ -141,8 +141,6 @@ function App() {
         return <ProgressTracker progress={progress} updateProgress={setProgress} />;
       case 'applications':
         return <ApplicationTracker applications={applications} updateApplications={setApplications} />;
-      case 'internships':
-        return <InternshipBoard />;
       case 'resources':
         return <ResourceHub resources={resources} updateResources={setResources} />;
       case 'assistant':

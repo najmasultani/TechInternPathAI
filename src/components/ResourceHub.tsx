@@ -13,6 +13,8 @@ import {
   Briefcase,
   Zap,
   Building
+  Github,
+  Star
 } from 'lucide-react';
 import { Resource } from '../types';
 
@@ -40,9 +42,45 @@ const ResourceHub: React.FC<ResourceHubProps> = ({ resources, updateResources })
     { id: 'Career', name: 'Career', icon: Briefcase },
     { id: 'Hackathons', name: 'Hackathons', icon: Zap },
     { id: 'Job Boards', name: 'Job Boards', icon: Building },
+    { id: 'Internships', name: 'Internships', icon: Briefcase },
     { id: 'Custom', name: 'Custom', icon: Plus },
   ];
 
+  // Add featured internship resources if they don't exist
+  React.useEffect(() => {
+    const hasSimplifyJobs = resources.some(r => r.title === 'SimplifyJobs - Summer 2026 Internships');
+    const hasSpeedyApply = resources.some(r => r.title === 'SpeedyApply - 2026 AI College Jobs');
+    
+    if (!hasSimplifyJobs || !hasSpeedyApply) {
+      const newResources = [...resources];
+      
+      if (!hasSimplifyJobs) {
+        newResources.push({
+          id: 'simplify-jobs-2026',
+          title: 'SimplifyJobs - Summer 2026 Internships',
+          url: 'https://github.com/SimplifyJobs/Summer2026-Internships',
+          category: 'Internships',
+          description: 'Comprehensive list of Summer 2026 software engineering internships, updated regularly by the community',
+          isBookmarked: true,
+          isFeatured: true
+        });
+      }
+      
+      if (!hasSpeedyApply) {
+        newResources.push({
+          id: 'speedy-apply-2026',
+          title: 'SpeedyApply - 2026 AI College Jobs',
+          url: 'https://github.com/speedyapply/2026-AI-College-Jobs',
+          category: 'Internships',
+          description: 'Curated collection of AI and technology internships for college students in 2026',
+          isBookmarked: true,
+          isFeatured: true
+        });
+      }
+      
+      updateResources(newResources);
+    }
+  }, [resources, updateResources]);
   const toggleBookmark = (id: string) => {
     const updatedResources = resources.map(resource =>
       resource.id === id ? { ...resource, isBookmarked: !resource.isBookmarked } : resource
@@ -77,6 +115,7 @@ const ResourceHub: React.FC<ResourceHubProps> = ({ resources, updateResources })
     return cat ? cat.icon : BookOpen;
   };
 
+  const featuredInternshipResources = resources.filter(r => r.category === 'Internships' && r.isFeatured);
   const getResourcesByCategory = () => {
     const grouped = resources.reduce((acc, resource) => {
       if (!acc[resource.category]) acc[resource.category] = [];
@@ -90,10 +129,58 @@ const ResourceHub: React.FC<ResourceHubProps> = ({ resources, updateResources })
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Resource Hub</h2>
-        <p className="text-gray-600">Curated resources for your internship journey</p>
+        <h2 className="text-3xl font-bold text-gray-900 mb-2">Resources & Internships</h2>
+        <p className="text-gray-600">Curated resources and live internship opportunities for your journey</p>
       </div>
 
+      {/* Featured Internship Sources */}
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-6">
+        <h3 className="text-xl font-bold text-blue-900 mb-4 flex items-center">
+          <Github className="mr-2" size={24} />
+          Live Internship Sources
+        </h3>
+        <p className="text-blue-800 mb-4">
+          Get the latest internship opportunities from these community-maintained repositories:
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {featuredInternshipResources.map(resource => (
+            <div key={resource.id} className="bg-white p-4 rounded-lg border border-blue-200">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Github className="text-blue-600" size={20} />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">{resource.title}</h4>
+                    <p className="text-sm text-blue-600">GitHub Repository</p>
+                  </div>
+                </div>
+                <Star className="text-yellow-500" size={16} />
+              </div>
+              
+              <p className="text-gray-600 text-sm mb-3">{resource.description}</p>
+              
+              <a
+                href={resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 text-sm font-medium"
+              >
+                <ExternalLink size={14} />
+                <span>View Repository</span>
+              </a>
+            </div>
+          ))}
+        </div>
+        
+        <div className="mt-4 p-3 bg-blue-100 rounded-lg">
+          <p className="text-blue-800 text-sm">
+            💡 <strong>Pro Tip:</strong> These repositories are updated daily with new internship postings. 
+            Bookmark them and check regularly for the latest opportunities!
+          </p>
+        </div>
+      </div>
       {/* Controls */}
       <div className="bg-white p-6 rounded-xl shadow-md">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -133,7 +220,7 @@ const ResourceHub: React.FC<ResourceHubProps> = ({ resources, updateResources })
       </div>
 
       {/* Categories Overview */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
         {categories.slice(1).map(category => {
           const Icon = category.icon;
           const count = resources.filter(r => r.category === category.id).length;
@@ -249,6 +336,9 @@ const ResourceHub: React.FC<ResourceHubProps> = ({ resources, updateResources })
                 </div>
                 
                 <button
+                  {resource.isFeatured && (
+                    <Star className="text-yellow-500" size={16} />
+                  )}
                   onClick={() => toggleBookmark(resource.id)}
                   className={`p-2 rounded-lg transition-colors ${
                     resource.isBookmarked 
@@ -274,6 +364,11 @@ const ResourceHub: React.FC<ResourceHubProps> = ({ resources, updateResources })
                 </a>
                 
                 {resource.isCustom && (
+                  {resource.isFeatured && (
+                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                      Featured
+                    </span>
+                  )}
                   <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
                     Custom
                   </span>

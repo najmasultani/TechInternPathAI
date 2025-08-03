@@ -31,7 +31,6 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab, onAuth
     { id: 'roadmap', label: 'Roadmap', icon: Map },
     { id: 'progress', label: 'Progress', icon: BarChart3 },
     { id: 'applications', label: 'Applications', icon: FileText },
-    { id: 'internships', label: 'Internships', icon: Briefcase },
     { id: 'resources', label: 'Resources', icon: BookOpen },
     { id: 'assistant', label: 'AI Assistant', icon: Bot },
     { id: 'achievements', label: 'Achievements', icon: Award },
