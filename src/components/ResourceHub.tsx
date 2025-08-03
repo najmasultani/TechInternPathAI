@@ -335,10 +335,11 @@ const ResourceHub: React.FC<ResourceHubProps> = ({ resources, updateResources })
                   </div>
                 </div>
                 
-                <button
+                <div className="flex items-center space-x-2">
                   {resource.isFeatured && (
                     <Star className="text-yellow-500" size={16} />
                   )}
+                  <button
                   onClick={() => toggleBookmark(resource.id)}
                   className={`p-2 rounded-lg transition-colors ${
                     resource.isBookmarked 
@@ -348,6 +349,7 @@ const ResourceHub: React.FC<ResourceHubProps> = ({ resources, updateResources })
                 >
                   {resource.isBookmarked ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}
                 </button>
+                </div>
               </div>
               
               <p className="text-gray-600 text-sm mb-4">{resource.description}</p>
@@ -363,16 +365,18 @@ const ResourceHub: React.FC<ResourceHubProps> = ({ resources, updateResources })
                   <span>Visit Resource</span>
                 </a>
                 
-                {resource.isCustom && (
+                <div className="flex items-center space-x-2">
                   {resource.isFeatured && (
                     <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
                       Featured
                     </span>
                   )}
+                  {resource.isCustom && (
                   <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
                     Custom
                   </span>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           );
