@@ -138,7 +138,7 @@ const AIAssistant: React.FC = () => {
     setIsTyping(true);
 
     // Simulate AI response delay
-    setTimeout(() => {
+    setTimeout(async () => {
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         text: await generateResponse(text),
