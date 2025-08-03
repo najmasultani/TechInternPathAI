@@ -12,7 +12,7 @@ import {
   Bot,
   Briefcase,
   Zap,
-  Building
+  Building,
   Github,
   Star
 } from 'lucide-react';
