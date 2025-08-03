@@ -74,6 +74,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess }) => 
       const result = await signInWithGoogle();
       if (result.error) {
         setError(result.error);
+        // If Google sign-in fails, suggest email alternative
+        if (result.error.includes('not properly configured')) {
+          setError(result.error + ' Please use email sign-in below.');
+        }
       } else {
         onSuccess();
         onClose();
@@ -136,7 +140,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess }) => 
         <button
           onClick={handleGoogleSignIn}
           disabled={loading}
-          className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 mb-4"
+          className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-4"
         >
           <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -146,6 +150,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess }) => 
           </svg>
           {loading ? 'Processing...' : 'Continue with Google'}
         </button>
+
+        <div className="text-center mb-4">
+          <p className="text-xs text-gray-500">
+            Having trouble with Google sign-in? Use email below instead.
+          </p>
+        </div>
 
         <div className="relative mb-4">
           <div className="absolute inset-0 flex items-center">

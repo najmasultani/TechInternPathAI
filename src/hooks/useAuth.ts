@@ -86,12 +86,18 @@ export const useAuth = () => {
 
   const signInWithGoogle = async () => {
     try {
+      // Clear any existing auth state
+      await signOut(auth).catch(() => {});
+      
       const result = await signInWithPopup(auth, googleProvider);
       return { user: result.user, error: null };
     } catch (error: any) {
       let errorMessage = 'Google sign-in failed';
       
       switch (error.code) {
+        case 'auth/api-key-not-valid':
+          errorMessage = 'Authentication service is not properly configured. Please try email sign-in instead.';
+          break;
         case 'auth/popup-closed-by-user':
           errorMessage = 'Sign-in was cancelled';
           break;
@@ -101,8 +107,14 @@ export const useAuth = () => {
         case 'auth/cancelled-popup-request':
           errorMessage = 'Sign-in was cancelled';
           break;
+        case 'auth/network-request-failed':
+          errorMessage = 'Network error. Please check your connection and try again.';
+          break;
+        case 'auth/too-many-requests':
+          errorMessage = 'Too many sign-in attempts. Please try again later.';
+          break;
         default:
-          errorMessage = error.message;
+          errorMessage = `Authentication error: ${error.message}`;
       }
       
       return { user: null, error: errorMessage };
