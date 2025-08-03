@@ -62,4 +62,21 @@ export interface UserProfile {
   level: number;
   badges: Badge[];
   joinDate: string;
+  uid?: string;
+}
+
+export interface Internship {
+  id: string;
+  company: string;
+  position: string;
+  location: string;
+  applicationUrl: string;
+  datePosted: string;
+  deadline?: string;
+  requirements: string[];
+  description: string;
+  salary?: string;
+  type: 'Software Engineering' | 'AI/ML' | 'Data Science' | 'Frontend' | 'Backend' | 'Full Stack' | 'Other';
+  source: 'SimplifyJobs' | 'SpeedyApply' | 'Manual';
+  isNew: boolean;
 }

@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import LandingPage from './components/LandingPage';
 import { useLocalStorage } from './hooks/useLocalStorage';
+import { useAuth } from './hooks/useAuth';
 import { generatePersonalizedRoadmap } from './utils/roadmapGenerator';
 import { RoadmapPhase, ProgressMetrics, Application, Resource, Badge, UserProfile } from './types';
 import Navigation from './components/Navigation';
 import RoadmapSection from './components/RoadmapSection';
 import ProgressTracker from './components/ProgressTracker';
 import ApplicationTracker from './components/ApplicationTracker';
+import InternshipBoard from './components/InternshipBoard';
 import ResourceHub from './components/ResourceHub';
 import AIAssistant from './components/AIAssistant';
 import Achievements from './components/Achievements';
 import Profile from './components/Profile';
+import AuthModal from './components/AuthModal';
 
 interface UserData {
   name: string;
@@ -28,6 +31,8 @@ interface UserData {
 function App() {
   const [showLanding, setShowLanding] = useLocalStorage<boolean>('showLanding', true);
   const [activeTab, setActiveTab] = useState('roadmap');
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const { user, loading } = useAuth();
   
   // Local storage for data persistence
   const [roadmapPhases, setRoadmapPhases] = useLocalStorage<RoadmapPhase[]>('roadmapPhases', []);
@@ -50,6 +55,19 @@ function App() {
     joinDate: new Date().toISOString(),
   });
 
+  // Show loading screen while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+          <p className="text-gray-600">Loading TechInternPath...</p>
+        </div>
+      </div>
+    );
+  }
   const handleOnboardingComplete = (userData: UserData) => {
     console.log('Onboarding completed with userData:', userData);
     
@@ -85,6 +103,7 @@ function App() {
     setProfile({
       name: userData.name,
       email: userData.email,
+      uid: user?.uid,
       totalPoints: 0,
       level: 1,
       badges: [],
@@ -113,6 +132,8 @@ function App() {
         return <ProgressTracker progress={progress} updateProgress={setProgress} />;
       case 'applications':
         return <ApplicationTracker applications={applications} updateApplications={setApplications} />;
+      case 'internships':
+        return <InternshipBoard />;
       case 'resources':
         return <ResourceHub resources={resources} updateResources={setResources} />;
       case 'assistant':
@@ -128,11 +149,24 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Navigation 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        onAuthClick={() => setShowAuthModal(true)}
+      />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {renderActiveTab()}
       </main>
+      
+      <AuthModal 
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={() => {
+          // Optionally sync user data with Firebase here
+          console.log('User authenticated successfully');
+        }}
+      />
       
       {/* Footer */}
       <footer className="bg-white border-t border-gray-200 mt-16">

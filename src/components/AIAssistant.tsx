@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Bot, Send, Lightbulb, BookOpen, Target, Briefcase, MessageCircle } from 'lucide-react';
+import { fetchInternships, getNewInternships } from '../services/internshipService';
+import { Internship } from '../types';
 
 interface Message {
   id: string;
@@ -12,14 +14,19 @@ const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hi! I'm your SWE internship assistant. I can help you with guidance on what to do next, suggest beginner projects, and answer questions about internship preparation. What would you like to know?",
+      text: "Hi! I'm your SWE internship assistant. I can help you with guidance on what to do next, suggest beginner projects, find new internship opportunities, and answer questions about internship preparation. What would you like to know?",
       isUser: false,
       timestamp: new Date(),
     },
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [internships, setInternships] = useState<Internship[]>([]);
 
+  React.useEffect(() => {
+    // Load internships data for AI responses
+    fetchInternships().then(setInternships);
+  }, []);
   const quickPrompts = [
     {
       icon: Target,
@@ -41,10 +48,56 @@ const AIAssistant: React.FC = () => {
       text: "How should I prepare for technical interviews?",
       category: "Interview Prep"
     },
+    {
+      icon: Briefcase,
+      text: "Show me new internships this week",
+      category: "Opportunities"
+    },
   ];
 
-  const generateResponse = (userMessage: string): string => {
+  const generateResponse = async (userMessage: string): Promise<string> => {
     const message = userMessage.toLowerCase();
+    
+    // Handle internship-related queries
+    if (message.includes('new internship') || message.includes('internships this week') || 
+        message.includes('latest internship') || message.includes('recent internship')) {
+      const newInternships = getNewInternships(internships, 7);
+      
+      if (newInternships.length === 0) {
+        return "I don't see any brand new internships posted in the last 7 days. However, here are some great opportunities still accepting applications:\n\n" +
+               internships.slice(0, 3).map(intern => 
+                 `• **${intern.company}** - ${intern.position}\n  📍 ${intern.location}\n  💰 ${intern.salary || 'Salary not specified'}\n  🔗 Apply: ${intern.applicationUrl}\n`
+               ).join('\n');
+      }
+      
+      return `Here are the **${newInternships.length} new internships** posted this week:\n\n` +
+             newInternships.map(intern => 
+               `• **${intern.company}** - ${intern.position}\n  📍 ${intern.location}\n  💰 ${intern.salary || 'Salary not specified'}\n  📅 Posted: ${new Date(intern.datePosted).toLocaleDateString()}\n  🔗 Apply: ${intern.applicationUrl}\n`
+             ).join('\n') +
+             '\n💡 **Tip:** Apply early! Many of these positions fill up quickly.';
+    }
+    
+    if (message.includes('google') || message.includes('microsoft') || message.includes('meta') || 
+        message.includes('amazon') || message.includes('apple')) {
+      const companyName = message.includes('google') ? 'Google' :
+                         message.includes('microsoft') ? 'Microsoft' :
+                         message.includes('meta') ? 'Meta' :
+                         message.includes('amazon') ? 'Amazon' : 'Apple';
+      
+      const companyInternships = internships.filter(intern => 
+        intern.company.toLowerCase().includes(companyName.toLowerCase())
+      );
+      
+      if (companyInternships.length > 0) {
+        return `Here are the current **${companyName}** internship opportunities:\n\n` +
+               companyInternships.map(intern => 
+                 `• **${intern.position}**\n  📍 ${intern.location}\n  💰 ${intern.salary || 'Salary not specified'}\n  📅 Deadline: ${intern.deadline ? new Date(intern.deadline).toLocaleDateString() : 'Not specified'}\n  🔗 Apply: ${intern.applicationUrl}\n`
+               ).join('\n') +
+               `\n💡 **${companyName} Tips:**\n• Apply early - they receive thousands of applications\n• Highlight relevant projects in your resume\n• Practice coding problems specific to their interview style`;
+      } else {
+        return `I don't see any current ${companyName} internships in our database. However, I recommend:\n\n• Check their careers page directly\n• Set up job alerts on their website\n• Connect with ${companyName} employees on LinkedIn\n• Attend their campus recruiting events\n\nWould you like me to show you similar opportunities at other top tech companies?`;
+      }
+    }
     
     if (message.includes('what should i do next') || message.includes('next step')) {
       return "Based on your current progress, here are some next steps:\n\n1. **Focus on fundamentals** - Make sure you have a solid grasp of one programming language (Python is great for beginners)\n2. **Build your first project** - Create something simple but meaningful, like a personal portfolio or a basic web app\n3. **Start networking** - Join your university's computer science clubs and attend tech meetups\n4. **Practice coding** - Begin with 2-3 LeetCode problems per week\n5. **Update your LinkedIn** - Add your projects and connect with classmates and professionals\n\nWhat area would you like to focus on first?";
@@ -88,13 +141,13 @@ const AIAssistant: React.FC = () => {
     setTimeout(() => {
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: generateResponse(text),
+        text: await generateResponse(text),
         isUser: false,
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, aiResponse]);
       setIsTyping(false);
-    }, 1000);
+    }, 1500);
   };
 
   return (
