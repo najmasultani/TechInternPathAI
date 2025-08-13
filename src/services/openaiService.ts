@@ -150,7 +150,8 @@ Generate a comprehensive, personalized roadmap for this student to secure a soft
       const jsonBlockMatch = response.match(/```json\s*([\s\S]*?)\s*```/);
       if (jsonBlockMatch) {
         try {
-          return JSON.parse(jsonBlockMatch[1]);
+          const sanitizedJson = this.sanitizeJsonString(jsonBlockMatch[1]);
+          return JSON.parse(sanitizedJson);
         } catch (blockError) {
           console.warn('Failed to parse JSON from code block:', blockError);
         }
@@ -163,7 +164,8 @@ Generate a comprehensive, personalized roadmap for this student to secure a soft
       if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
         const jsonString = response.substring(firstBrace, lastBrace + 1);
         try {
-          return JSON.parse(jsonString);
+          const sanitizedJson = this.sanitizeJsonString(jsonString);
+          return JSON.parse(sanitizedJson);
         } catch (extractError) {
           console.warn('Failed to parse extracted JSON:', extractError);
         }
@@ -172,6 +174,14 @@ Generate a comprehensive, personalized roadmap for this student to secure a soft
       // If all parsing attempts fail, throw the original error
       throw new Error(`Failed to parse JSON response: ${error}`);
     }
+  }
+
+  private sanitizeJsonString(jsonString: string): string {
+    // Replace literal newlines and tabs with their escaped JSON equivalents
+    return jsonString
+      .replace(/\n/g, '\\n')
+      .replace(/\t/g, '\\t')
+      .replace(/\r/g, '\\r');
   }
 }
 
