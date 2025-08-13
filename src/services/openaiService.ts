@@ -48,7 +48,8 @@ export class OpenAIService {
       }
 
       const data: OpenAIResponse = await response.json();
-      return data.choices[0]?.message?.content || 'Sorry, I could not generate a response.';
+      const content = data.choices[0]?.message?.content || 'Sorry, I could not generate a response.';
+      return content;
     } catch (error) {
       console.error('OpenAI API error:', error);
       throw error;
@@ -125,8 +126,8 @@ Generate a comprehensive, personalized roadmap for this student to secure a soft
         { role: 'user', content: userPrompt }
       ], 'gpt-4');
 
-      // Parse the JSON response
-      const roadmapData = JSON.parse(response);
+      // Extract and parse the JSON response
+      const roadmapData = this.extractAndParseJSON(response);
       
       // Validate the structure
       if (!roadmapData.phases || !roadmapData.resources || !roadmapData.badges) {
@@ -137,6 +138,39 @@ Generate a comprehensive, personalized roadmap for this student to secure a soft
     } catch (error) {
       console.error('Error generating AI roadmap:', error);
       throw error;
+    }
+  }
+
+  private extractAndParseJSON(response: string): any {
+    try {
+      // First, try to parse the response directly
+      return JSON.parse(response);
+    } catch (error) {
+      // If direct parsing fails, try to extract JSON from markdown code blocks
+      const jsonBlockMatch = response.match(/```json\s*([\s\S]*?)\s*```/);
+      if (jsonBlockMatch) {
+        try {
+          return JSON.parse(jsonBlockMatch[1]);
+        } catch (blockError) {
+          console.warn('Failed to parse JSON from code block:', blockError);
+        }
+      }
+
+      // If no code block found, try to extract JSON object manually
+      const firstBrace = response.indexOf('{');
+      const lastBrace = response.lastIndexOf('}');
+      
+      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+        const jsonString = response.substring(firstBrace, lastBrace + 1);
+        try {
+          return JSON.parse(jsonString);
+        } catch (extractError) {
+          console.warn('Failed to parse extracted JSON:', extractError);
+        }
+      }
+
+      // If all parsing attempts fail, throw the original error
+      throw new Error(`Failed to parse JSON response: ${error}`);
     }
   }
 }
