@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Bot } from 'lucide-react';
 import LandingPage from './components/LandingPage';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useAuth } from './hooks/useAuth';
