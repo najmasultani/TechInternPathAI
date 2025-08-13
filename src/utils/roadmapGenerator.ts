@@ -13,16 +13,16 @@ interface UserData {
   experience: string;
   goals: string[];
   // New detailed fields
-  startDate?: string;
-  internshipStartDate?: string;
-  technicalLevel?: string;
-  knownLanguages?: string[];
-  specificRole?: string;
-  targetCompanies?: string[];
-  weeklyHours?: string;
-  examPeriods?: string;
-  hasResumeLinkedIn?: string;
-  hasPortfolioGitHub?: string;
+  startDate: string;
+  internshipStartDate: string;
+  technicalLevel: string;
+  knownLanguages: string[];
+  specificRole: string;
+  targetCompanies: string[];
+  weeklyHours: string;
+  examPeriods: string;
+  hasResumeLinkedIn: string;
+  hasPortfolioGitHub: string;
 }
 
 export const generatePersonalizedRoadmap = async (userData: UserData): Promise<{
