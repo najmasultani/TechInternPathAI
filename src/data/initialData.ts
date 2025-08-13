@@ -16,7 +16,7 @@ export const initialRoadmapPhases: RoadmapPhase[] = [
       { id: 'task-1-5', text: 'Learn Git and GitHub basics', completed: false },
       { id: 'task-1-6', text: 'Learn Python', completed: false },
       { id: 'task-1-7', text: 'Start Harvard CS50', completed: false },
-      { id: 'task-1-8', text: 'Join Hack the 6ix (Aug 2–4)', completed: false },
+      { id: 'task-1-8', text: 'Join Kaggle competitions and learn data science', completed: false },
       { id: 'task-1-9', text: 'Join Global Hack Week – Beginners (Aug 8–14)', completed: false },
       { id: 'task-1-10', text: 'Explore internships: Google STEP, Microsoft Explore, RBC Amplify, Ubisoft NXT', completed: false },
     ],
@@ -97,7 +97,6 @@ export const initialResources: Resource[] = [
   // Hackathons
   { id: 'res-15', title: 'MLH (Major League Hacking)', url: 'https://mlh.io/', category: 'Hackathons', description: 'Find hackathons worldwide', isBookmarked: false },
   { id: 'res-16', title: 'Devpost', url: 'https://devpost.com/', category: 'Hackathons', description: 'Discover and join hackathons', isBookmarked: false },
-  { id: 'res-17', title: 'Hack the 6ix', url: 'https://hackthe6ix.com/', category: 'Hackathons', description: 'Toronto\'s largest summer hackathon', isBookmarked: false },
   
   // Job Boards
   { id: 'res-18', title: 'Simplify', url: 'https://simplify.jobs/', category: 'Job Boards', description: 'AI-powered job search platform', isBookmarked: false },

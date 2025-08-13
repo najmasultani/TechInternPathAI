@@ -133,54 +133,6 @@ const ResourceHub: React.FC<ResourceHubProps> = ({ resources, updateResources })
         <p className="text-gray-600">Curated resources and live internship opportunities for your journey</p>
       </div>
 
-      {/* Featured Internship Sources */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-6">
-        <h3 className="text-xl font-bold text-blue-900 mb-4 flex items-center">
-          <Github className="mr-2" size={24} />
-          Live Internship Sources
-        </h3>
-        <p className="text-blue-800 mb-4">
-          Get the latest internship opportunities from these community-maintained repositories:
-        </p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {featuredInternshipResources.map(resource => (
-            <div key={resource.id} className="bg-white p-4 rounded-lg border border-blue-200">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Github className="text-blue-600" size={20} />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">{resource.title}</h4>
-                    <p className="text-sm text-blue-600">GitHub Repository</p>
-                  </div>
-                </div>
-                <Star className="text-yellow-500" size={16} />
-              </div>
-              
-              <p className="text-gray-600 text-sm mb-3">{resource.description}</p>
-              
-              <a
-                href={resource.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 text-sm font-medium"
-              >
-                <ExternalLink size={14} />
-                <span>View Repository</span>
-              </a>
-            </div>
-          ))}
-        </div>
-        
-        <div className="mt-4 p-3 bg-blue-100 rounded-lg">
-          <p className="text-blue-800 text-sm">
-            💡 <strong>Pro Tip:</strong> These repositories are updated daily with new internship postings. 
-            Bookmark them and check regularly for the latest opportunities!
-          </p>
-        </div>
-      </div>
       {/* Controls */}
       <div className="bg-white p-6 rounded-xl shadow-md">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">

@@ -114,7 +114,7 @@ const generateTemplateRoadmap = (userData: UserData): {
 
   // Add networking and events
   if (userData.goals.includes('Attend hackathons')) {
-    phase1Tasks.push({ id: 'task-1-9', text: 'Register for Hack the 6ix (Aug 2-4) or similar hackathon', completed: false });
+    phase1Tasks.push({ id: 'task-1-9', text: 'Join Kaggle competitions and explore data science challenges', completed: false });
   }
 
   phase1Tasks.push({ id: 'task-1-10', text: 'Join Global Hack Week – Beginners (Aug 8-14)', completed: false });
@@ -419,7 +419,7 @@ const generateTemplateRoadmap = (userData: UserData): {
     resources.push(
       { id: 'res-hack-1', title: 'Major League Hacking', url: 'https://mlh.io/', category: 'Hackathons', description: 'Find hackathons worldwide', isBookmarked: true },
       { id: 'res-hack-2', title: 'Devpost', url: 'https://devpost.com/', category: 'Hackathons', description: 'Discover and submit to hackathons', isBookmarked: false },
-      { id: 'res-hack-3', title: 'Hack the 6ix', url: 'https://hackthe6ix.com/', category: 'Hackathons', description: 'Toronto\'s largest summer hackathon', isBookmarked: false }
+      { id: 'res-hack-3', title: 'Kaggle', url: 'https://kaggle.com/', category: 'Data Science', description: 'Data science competitions and learning', isBookmarked: false }
     );
   }
 

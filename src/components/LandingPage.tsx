@@ -150,27 +150,27 @@ const LandingPage: React.FC<LandingPageProps> = ({ onComplete, onSignInClick, sh
         </header>
 
         {/* Hero Section */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <section className="py-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="w-20 h-20 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-8">
+            <div className="w-16 h-16 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <Rocket className="text-blue-600" size={40} />
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
               Your Path to a 
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 {" "}Dream Internship
               </span>
             </h1>
             
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
               Get a personalized roadmap to land software engineering internships at top companies like Google, Microsoft, Meta, and more by Summer 2026.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={() => window.location.href = '#onboarding'}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center justify-center space-x-2 text-lg font-medium"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center justify-center space-x-2 font-medium"
               >
                 <span>Get Started Free</span>
                 <ArrowRight size={20} />
@@ -178,7 +178,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onComplete, onSignInClick, sh
               
               <button
                 onClick={onSignInClick}
-                className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg hover:bg-blue-50 transition-colors text-lg font-medium"
+                className="border-2 border-blue-600 text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors font-medium"
               >
                 Sign In
               </button>
@@ -187,73 +187,73 @@ const LandingPage: React.FC<LandingPageProps> = ({ onComplete, onSignInClick, sh
         </section>
 
         {/* Features Section */}
-        <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
                 Everything You Need to Succeed
               </h2>
-              <p className="text-gray-600 text-lg">
+              <p className="text-gray-600">
                 A comprehensive platform designed specifically for students pursuing software engineering internships
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <div className="p-6 bg-blue-50 rounded-xl">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="p-5 bg-blue-50 rounded-xl">
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-3">
                   <Target className="text-blue-600" size={24} />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Personalized Roadmap</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Personalized Roadmap</h3>
                 <p className="text-gray-600">
                   Get a custom timeline tailored to your skills, goals, and target companies. No generic advice - just what you need.
                 </p>
               </div>
 
-              <div className="p-6 bg-green-50 rounded-xl">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+              <div className="p-5 bg-green-50 rounded-xl">
+                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mb-3">
                   <Briefcase className="text-green-600" size={24} />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Live Internship Board</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Live Internship Board</h3>
                 <p className="text-gray-600">
                   Access real-time internship opportunities from top companies, updated daily from trusted sources.
                 </p>
               </div>
 
-              <div className="p-6 bg-purple-50 rounded-xl">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+              <div className="p-5 bg-purple-50 rounded-xl">
+                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mb-3">
                   <Bot className="text-purple-600" size={24} />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">AI Assistant</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">AI Assistant</h3>
                 <p className="text-gray-600">
                   Get instant answers to your questions about internship prep, coding practice, and career guidance.
                 </p>
               </div>
 
-              <div className="p-6 bg-orange-50 rounded-xl">
-                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+              <div className="p-5 bg-orange-50 rounded-xl">
+                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mb-3">
                   <TrendingUp className="text-orange-600" size={24} />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Progress Tracking</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Progress Tracking</h3>
                 <p className="text-gray-600">
                   Monitor your journey with detailed metrics on projects, coding practice, and application progress.
                 </p>
               </div>
 
-              <div className="p-6 bg-cyan-50 rounded-xl">
-                <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mb-4">
+              <div className="p-5 bg-cyan-50 rounded-xl">
+                <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center mb-3">
                   <BookOpen className="text-cyan-600" size={24} />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Curated Resources</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Curated Resources</h3>
                 <p className="text-gray-600">
                   Access handpicked learning materials, coding platforms, and career resources for your specific goals.
                 </p>
               </div>
 
-              <div className="p-6 bg-pink-50 rounded-xl">
-                <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mb-4">
+              <div className="p-5 bg-pink-50 rounded-xl">
+                <div className="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center mb-3">
                   <Award className="text-pink-600" size={24} />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Achievement System</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Achievement System</h3>
                 <p className="text-gray-600">
                   Stay motivated with badges and points as you complete milestones on your internship journey.
                 </p>
@@ -263,13 +263,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onComplete, onSignInClick, sh
         </section>
 
         {/* Stats Section */}
-        <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <section className="py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">
               Join Thousands of Students
             </h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <div className="text-4xl font-bold text-blue-600 mb-2">500+</div>
                 <div className="text-gray-600">Live Internship Opportunities</div>
@@ -287,43 +287,43 @@ const LandingPage: React.FC<LandingPageProps> = ({ onComplete, onSignInClick, sh
         </section>
 
         {/* How It Works */}
-        <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
                 How It Works
               </h2>
-              <p className="text-gray-600 text-lg">
+              <p className="text-gray-600">
                 Get started in just 3 simple steps
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-blue-600">1</span>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Answer Questions</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Answer Questions</h3>
                 <p className="text-gray-600">
                   Tell our AI about your background, skills, and goals through a quick interactive questionnaire.
                 </p>
               </div>
 
               <div className="text-center">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-green-600">2</span>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Get Your Roadmap</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Get Your Roadmap</h3>
                 <p className="text-gray-600">
                   Receive a personalized timeline with specific tasks, deadlines, and resources tailored to you.
                 </p>
               </div>
 
               <div className="text-center">
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-purple-600">3</span>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Track & Apply</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Track & Apply</h3>
                 <p className="text-gray-600">
                   Monitor your progress, discover new opportunities, and manage your applications all in one place.
                 </p>
@@ -333,21 +333,21 @@ const LandingPage: React.FC<LandingPageProps> = ({ onComplete, onSignInClick, sh
         </section>
 
         {/* CTA Section */}
-        <section id="onboarding" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-purple-600">
+        <section id="onboarding" className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-purple-600">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
               Ready to Start Your Journey?
             </h2>
-            <p className="text-xl text-blue-100 mb-8">
+            <p className="text-lg text-blue-100 mb-6">
               Join thousands of students who are already on their path to landing dream internships
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <OnboardingButton onComplete={onComplete} />
               
               <button
                 onClick={onSignInClick}
-                className="bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-lg hover:bg-white/30 transition-all duration-200 text-lg font-medium border border-white/30"
+                className="bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-lg hover:bg-white/30 transition-all duration-200 font-medium border border-white/30"
               >
                 Sign In to Continue
               </button>
