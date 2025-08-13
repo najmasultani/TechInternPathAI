@@ -12,6 +12,17 @@ interface UserData {
   preferredCompanies: string[];
   experience: string;
   goals: string[];
+  // New detailed fields
+  startDate?: string;
+  internshipStartDate?: string;
+  technicalLevel?: string;
+  knownLanguages?: string[];
+  specificRole?: string;
+  targetCompanies?: string[];
+  weeklyHours?: string;
+  examPeriods?: string;
+  hasResumeLinkedIn?: string;
+  hasPortfolioGitHub?: string;
 }
 
 export const generatePersonalizedRoadmap = async (userData: UserData): Promise<{
@@ -22,8 +33,8 @@ export const generatePersonalizedRoadmap = async (userData: UserData): Promise<{
   console.log('Generating roadmap for user data:', userData);
   
   try {
-    // Try to generate roadmap using OpenAI
-    const aiRoadmap = await openaiService.generateRoadmap(userData);
+    // Try to generate roadmap using OpenAI with detailed questionnaire approach
+    const aiRoadmap = await openaiService.generateDetailedRoadmap(userData);
     
     // Ensure all items have proper IDs and structure
     const phases = aiRoadmap.phases.map((phase: any, index: number) => ({
@@ -117,7 +128,7 @@ const generateTemplateRoadmap = (userData: UserData): {
     phase1Tasks.push({ id: 'task-1-9', text: 'Join Kaggle competitions and explore data science challenges', completed: false });
   }
 
-  phase1Tasks.push({ id: 'task-1-10', text: 'Join Global Hack Week – Beginners (Aug 8-14)', completed: false });
+  phase1Tasks.push({ id: 'task-1-10', text: 'Participate in coding challenges and online competitions', completed: false });
 
   // Add company research based on preferences
   if (userData.preferredCompanies.length > 0) {
