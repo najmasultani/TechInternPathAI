@@ -1,4 +1,5 @@
 import { RoadmapPhase, Task, Resource, Badge } from '../types';
+import { openaiService } from '../services/openaiService';
 
 interface UserData {
   name: string;
@@ -13,13 +14,55 @@ interface UserData {
   goals: string[];
 }
 
-export const generatePersonalizedRoadmap = (userData: UserData): {
+export const generatePersonalizedRoadmap = async (userData: UserData): Promise<{
+  phases: RoadmapPhase[];
+  resources: Resource[];
+  badges: Badge[];
+}> => {
+  console.log('Generating roadmap for user data:', userData);
+  
+  try {
+    // Try to generate roadmap using OpenAI
+    const aiRoadmap = await openaiService.generateRoadmap(userData);
+    
+    // Ensure all items have proper IDs and structure
+    const phases = aiRoadmap.phases.map((phase: any, index: number) => ({
+      ...phase,
+      id: phase.id || `phase-${index + 1}`,
+      tasks: phase.tasks.map((task: any, taskIndex: number) => ({
+        ...task,
+        id: task.id || `task-${index + 1}-${taskIndex + 1}`,
+        completed: false
+      }))
+    }));
+    
+    const resources = aiRoadmap.resources.map((resource: any, index: number) => ({
+      ...resource,
+      id: resource.id || `res-${index + 1}`,
+      isBookmarked: resource.isBookmarked || false
+    }));
+    
+    const badges = aiRoadmap.badges.map((badge: any, index: number) => ({
+      ...badge,
+      id: badge.id || `badge-${index + 1}`,
+      earned: false
+    }));
+    
+    return { phases, resources, badges };
+  } catch (error) {
+    console.error('Error generating AI roadmap, falling back to template:', error);
+    
+    // Fallback to the existing template-based generation
+    return generateTemplateRoadmap(userData);
+  }
+};
+
+// Fallback template-based roadmap generation
+const generateTemplateRoadmap = (userData: UserData): {
   phases: RoadmapPhase[];
   resources: Resource[];
   badges: Badge[];
 } => {
-  console.log('Generating roadmap for user data:', userData);
-  
   const isBeginnerLevel = userData.experience === 'complete-beginner' || userData.experience === 'some-basics';
   const hasWebSkills = userData.currentSkills.some(skill => 
     ['JavaScript', 'HTML/CSS', 'React', 'Node.js', 'Web Development'].includes(skill)

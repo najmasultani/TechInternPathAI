@@ -38,7 +38,7 @@ interface UserData {
 }
 
 interface LandingPageProps {
-  onComplete: (userData: UserData) => void;
+  onComplete: (userData: UserData) => Promise<void>;
   onSignInClick: () => void;
   showOnboarding?: boolean;
 }
@@ -964,17 +964,19 @@ const GeneratingStep: React.FC<{
   userData: UserData;
   setUserData: (data: UserData) => void;
   onNext: () => void;
-  onComplete: (userData: UserData) => void;
+  onComplete: (userData: UserData) => Promise<void>;
 }> = ({ userData, onComplete }) => {
   const [progress, setProgress] = useState(0);
-  const [currentTask, setCurrentTask] = useState('Analyzing your profile...');
+  const [currentTask, setCurrentTask] = useState('Connecting to AI...');
 
   const tasks = [
+    'Connecting to AI...',
     'Analyzing your profile...',
     'Identifying skill gaps...',
     'Researching target companies...',
-    'Creating timeline...',
-    'Selecting resources...',
+    'Creating personalized timeline...',
+    'Selecting curated resources...',
+    'Generating achievement system...',
     'Finalizing your roadmap...'
   ];
 
@@ -985,9 +987,9 @@ const GeneratingStep: React.FC<{
         const newProgress = prev + (100 / tasks.length);
         if (newProgress >= 100) {
           clearInterval(interval);
-          setTimeout(() => {
+          setTimeout(async () => {
             console.log('Completing onboarding with data:', userData);
-            onComplete(userData);
+            await onComplete(userData);
           }, 1000);
           return 100;
         }

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Bot, Send, Lightbulb, BookOpen, Target, Briefcase, MessageCircle } from 'lucide-react';
-import { fetchInternships, getNewInternships } from '../services/internshipService';
-import { Internship } from '../types';
+import { openaiService } from '../services/openaiService';
 
 interface Message {
   id: string;
@@ -14,19 +13,14 @@ const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hi! I'm your SWE internship assistant. I can help you with guidance on what to do next, suggest beginner projects, find new internship opportunities, and answer questions about internship preparation. What would you like to know?",
+      text: "Hi! I'm your AI-powered SWE internship assistant. I can provide personalized guidance on your next steps, suggest projects tailored to your goals, help with interview preparation, and answer any questions about your internship journey. What would you like to know?",
       isUser: false,
       timestamp: new Date(),
     },
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [internships, setInternships] = useState<Internship[]>([]);
 
-  React.useEffect(() => {
-    // Load internships data for AI responses
-    fetchInternships().then(setInternships);
-  }, []);
   const quickPrompts = [
     {
       icon: Target,
@@ -40,7 +34,7 @@ const AIAssistant: React.FC = () => {
     },
     {
       icon: Briefcase,
-      text: "Are there any upcoming internships for first-years?",
+      text: "What internships should I target as a first-year student?",
       category: "Opportunities"
     },
     {
@@ -50,76 +44,49 @@ const AIAssistant: React.FC = () => {
     },
     {
       icon: Briefcase,
-      text: "Show me new internships this week",
-      category: "Opportunities"
+      text: "How do I prepare for behavioral interviews?",
+      category: "Interview Prep"
     },
   ];
 
   const generateResponse = async (userMessage: string): Promise<string> => {
-    const message = userMessage.toLowerCase();
-    
-    // Handle internship-related queries
-    if (message.includes('new internship') || message.includes('internships this week') || 
-        message.includes('latest internship') || message.includes('recent internship')) {
-      const newInternships = getNewInternships(internships, 7);
+    try {
+      const systemMessage = `You are an expert AI assistant specializing in software engineering internship preparation. You help students navigate their journey to landing internships at top tech companies.
+
+Your expertise includes:
+- Personalized career guidance and next steps
+- Project recommendations based on skill level and goals
+- Technical interview preparation strategies
+- Resume and portfolio optimization
+- Company-specific application advice
+- Learning resource recommendations
+- Coding practice guidance
+- Networking and professional development
+
+Provide helpful, actionable, and encouraging responses. Use markdown formatting for better readability. Keep responses concise but comprehensive.`;
+
+      const response = await openaiService.chatCompletion([
+        { role: 'system', content: systemMessage },
+        { role: 'user', content: userMessage }
+      ]);
+
+      return response;
+    } catch (error) {
+      console.error('AI Assistant error:', error);
       
-      if (newInternships.length === 0) {
-        return "I don't see any brand new internships posted in the last 7 days. However, here are some great opportunities still accepting applications:\n\n" +
-               internships.slice(0, 3).map(intern => 
-                 `• **${intern.company}** - ${intern.position}\n  📍 ${intern.location}\n  💰 ${intern.salary || 'Salary not specified'}\n  🔗 Apply: ${intern.applicationUrl}\n`
-               ).join('\n');
+      // Fallback to basic responses if API fails
+      const message = userMessage.toLowerCase();
+      
+      if (message.includes('what should i do next') || message.includes('next step')) {
+        return "Based on typical internship preparation, here are some next steps:\n\n1. **Focus on fundamentals** - Master one programming language\n2. **Build projects** - Create 2-3 meaningful projects\n3. **Start networking** - Join tech communities and events\n4. **Practice coding** - Begin with LeetCode easy problems\n5. **Update profiles** - Polish LinkedIn and GitHub\n\nWhat area would you like to focus on first?";
       }
       
-      return `Here are the **${newInternships.length} new internships** posted this week:\n\n` +
-             newInternships.map(intern => 
-               `• **${intern.company}** - ${intern.position}\n  📍 ${intern.location}\n  💰 ${intern.salary || 'Salary not specified'}\n  📅 Posted: ${new Date(intern.datePosted).toLocaleDateString()}\n  🔗 Apply: ${intern.applicationUrl}\n`
-             ).join('\n') +
-             '\n💡 **Tip:** Apply early! Many of these positions fill up quickly.';
-    }
-    
-    if (message.includes('google') || message.includes('microsoft') || message.includes('meta') || 
-        message.includes('amazon') || message.includes('apple')) {
-      const companyName = message.includes('google') ? 'Google' :
-                         message.includes('microsoft') ? 'Microsoft' :
-                         message.includes('meta') ? 'Meta' :
-                         message.includes('amazon') ? 'Amazon' : 'Apple';
-      
-      const companyInternships = internships.filter(intern => 
-        intern.company.toLowerCase().includes(companyName.toLowerCase())
-      );
-      
-      if (companyInternships.length > 0) {
-        return `Here are the current **${companyName}** internship opportunities:\n\n` +
-               companyInternships.map(intern => 
-                 `• **${intern.position}**\n  📍 ${intern.location}\n  💰 ${intern.salary || 'Salary not specified'}\n  📅 Deadline: ${intern.deadline ? new Date(intern.deadline).toLocaleDateString() : 'Not specified'}\n  🔗 Apply: ${intern.applicationUrl}\n`
-               ).join('\n') +
-               `\n💡 **${companyName} Tips:**\n• Apply early - they receive thousands of applications\n• Highlight relevant projects in your resume\n• Practice coding problems specific to their interview style`;
-      } else {
-        return `I don't see any current ${companyName} internships in our database. However, I recommend:\n\n• Check their careers page directly\n• Set up job alerts on their website\n• Connect with ${companyName} employees on LinkedIn\n• Attend their campus recruiting events\n\nWould you like me to show you similar opportunities at other top tech companies?`;
+      if (message.includes('project')) {
+        return "Here are some great project ideas:\n\n**Web Development:**\n• Personal portfolio website\n• Todo list with local storage\n• Weather app using APIs\n\n**Python Projects:**\n• Password generator\n• Data analysis dashboard\n• Simple web scraper\n\n**AI Projects:**\n• Chatbot using OpenAI API\n• Recommendation system\n• Text analyzer\n\nPick something that excites you and matches your current skill level!";
       }
+      
+      return "I'm here to help with your internship journey! I can provide guidance on projects, interview prep, applications, and more. What specific area would you like to focus on?";
     }
-    
-    if (message.includes('what should i do next') || message.includes('next step')) {
-      return "Based on your current progress, here are some next steps:\n\n1. **Focus on fundamentals** - Make sure you have a solid grasp of one programming language (Python is great for beginners)\n2. **Build your first project** - Create something simple but meaningful, like a personal portfolio or a basic web app\n3. **Start networking** - Join your university's computer science clubs and attend tech meetups\n4. **Practice coding** - Begin with 2-3 LeetCode problems per week\n5. **Update your LinkedIn** - Add your projects and connect with classmates and professionals\n\nWhat area would you like to focus on first?";
-    }
-    
-    if (message.includes('project') || message.includes('beginner project')) {
-      return "Here are some great beginner project ideas:\n\n**Web Development:**\n• Personal portfolio website\n• Todo list app with local storage\n• Weather app using a public API\n• Recipe finder with search functionality\n\n**Python Projects:**\n• Password generator\n• Simple calculator with GUI\n• Web scraper for job listings\n• Basic data analysis of a dataset\n\n**Mobile-friendly:**\n• Expense tracker\n• Habit tracker\n• Simple game (like Tic-Tac-Toe)\n\n**AI/Data Science:**\n• Chatbot using OpenAI API\n• Simple recommendation system\n• Data visualization dashboard\n\nPick one that excites you! The key is to start with something achievable and gradually add features.";
-    }
-    
-    if (message.includes('internship') || message.includes('opportunities')) {
-      return "Great question! Here are some first-year friendly internship opportunities:\n\n**Large Tech Companies:**\n• Google STEP (Software Training Engineering Program)\n• Microsoft Explore Program\n• Amazon Future Engineer Program\n• Meta University\n• Apple Scholars Program\n\n**Financial/Consulting:**\n• RBC Amplify Program\n• Goldman Sachs Engineering Essentials\n• BlackRock Future Tech Leaders\n\n**Canadian Opportunities:**\n• Shopify Dev Degree\n• TD Lab Innovation Program\n• Ubisoft Next Program\n\n**Application Timeline:**\n• Most applications open in fall (September-November)\n• Apply early - many close by December\n• Start preparing your resume and portfolio now\n\nWould you like specific tips for any of these programs?";
-    }
-    
-    if (message.includes('interview') || message.includes('technical')) {
-      return "Here's how to prepare for technical interviews:\n\n**Coding Practice:**\n• Start with LeetCode Easy problems\n• Focus on basic data structures (arrays, strings, hashmaps)\n• Practice explaining your thought process out loud\n• Use platforms like Pramp for mock interviews\n\n**Key Topics to Study:**\n• Arrays and String manipulation\n• Basic algorithms (sorting, searching)\n• Time and space complexity (Big O)\n• Simple data structures\n\n**Behavioral Questions:**\n• Use the STAR method (Situation, Task, Action, Result)\n• Prepare stories about projects and challenges\n• Practice common questions about teamwork and problem-solving\n\n**Resources:**\n• Cracking the Coding Interview book\n• LeetCode's Interview Crash Course\n• Pramp for peer mock interviews\n• Your university's career services\n\nStart with 30 minutes of practice daily. Consistency is key!";
-    }
-    
-    if (message.includes('resume') || message.includes('portfolio')) {
-      return "Let's build a strong resume and portfolio:\n\n**Resume Essentials:**\n• Keep it to 1 page\n• Include relevant coursework, projects, and any tech experience\n• Use action verbs (built, developed, implemented)\n• Quantify achievements where possible\n• Include GitHub link and LinkedIn\n\n**Portfolio Must-haves:**\n• 2-3 quality projects with live demos\n• Clean, professional design\n• Clear project descriptions and your role\n• Link to GitHub repositories\n• About section with your story\n\n**GitHub Profile:**\n• Pin your best repositories\n• Write clear README files\n• Commit regularly to show activity\n• Include a professional profile photo\n\nWant me to review any specific section or help you brainstorm project ideas?";
-    }
-    
-    return "I'd be happy to help! I can provide guidance on:\n• Next steps in your internship preparation\n• Beginner-friendly project ideas\n• Upcoming internship opportunities\n• Technical interview preparation\n• Resume and portfolio building\n• Learning resources and study plans\n\nWhat specific area would you like to focus on? Feel free to ask me anything about your software engineering journey!";
   };
 
   const handleSend = async (messageText?: string) => {
@@ -137,8 +104,7 @@ const AIAssistant: React.FC = () => {
     setInput('');
     setIsTyping(true);
 
-    // Simulate AI response delay
-    setTimeout(async () => {
+    try {
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         text: await generateResponse(text),
@@ -147,7 +113,17 @@ const AIAssistant: React.FC = () => {
       };
       setMessages(prev => [...prev, aiResponse]);
       setIsTyping(false);
-    }, 1500);
+    } catch (error) {
+      console.error('Error generating response:', error);
+      const errorResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "I'm sorry, I'm having trouble connecting right now. Please try again in a moment, or feel free to ask me anything about your internship preparation!",
+        isUser: false,
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, errorResponse]);
+      setIsTyping(false);
+    }
   };
 
   return (
