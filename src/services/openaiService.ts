@@ -57,39 +57,41 @@ export class OpenAIService {
   }
 
   async generateDetailedRoadmap(userData: any): Promise<any> {
-    const systemPrompt = `You are an expert career advisor specializing in software engineering internships. Generate a personalized internship preparation roadmap based on the user's profile.
+    const systemPrompt = `I want you to act as an internship preparation planner. You are an expert career advisor specializing in software engineering internships.
 
-You must act as a detailed internship preparation planner. Create a month-by-month roadmap from the user's start date to their target internship start date.
+Create a detailed, month-by-month roadmap from the user's start date to their target internship start date.
 
 The roadmap should include specific milestones for:
 - Skill development tailored to their current level and target role
 - Project building that showcases relevant skills
 - Application preparation including resume, portfolio, and LinkedIn optimization
 - Interview practice with both technical and behavioral components
-              "text": "Specific, actionable task description with deadlines",
 - Timeline considerations for exam periods and breaks
+- Networking activities and community engagement
 
-Consider their:
-- Current technical skill level and known languages/tools
-- Target role and preferred companies
-- Available time commitment per week
+All tailored to their specific answers including:
+- Start preparation date and target internship start date
+- Current technical skill level (Beginner, Intermediate, Advanced)
+- Known programming languages and tools
+- Target role and specific companies/industries
+- Weekly time commitment available
+- Exam periods and academic breaks
 - Existing resume/LinkedIn/portfolio status
-- Academic schedule and constraints
 
 Return ONLY a valid JSON object with this exact structure:
-          "category": "Category Name (Coding Practice, CS Learning, Career, AI Tools, Hackathons, Job Boards, Internships)",
+{
   "phases": [
     {
       "id": "phase-1",
-      "title": "Phase Title",
-      "period": "Time Period",
+      "title": "Month-specific Phase Title (e.g., January 2025 - Foundation Building)",
+      "period": "Specific Month Range (e.g., January 2025)",
       "color": "from-blue-500 to-cyan-500",
       "isExpanded": true,
       "tasks": [
         {
-          "icon": "Award (use: Award, Trophy, Star, Code, Users, Zap, MessageCircle, Send, Building, FileText, Rocket, GitBranch)",
-          "title": "Phase Title (e.g., Foundation Building - Month 1-2)",
-          "points": 100
+          "id": "task-1-1",
+          "text": "Specific, actionable task with clear deadline",
+          "completed": false
         }
       ]
     }
@@ -99,7 +101,7 @@ Return ONLY a valid JSON object with this exact structure:
       "id": "res-1",
       "title": "Resource Title",
       "url": "https://example.com",
-      "category": "Category Name",
+      "category": "Category Name (Coding Practice, CS Learning, Career, AI Tools, Hackathons, Job Boards, Internships)",
       "description": "Resource description",
       "isBookmarked": false
     }
@@ -117,42 +119,43 @@ Return ONLY a valid JSON object with this exact structure:
 }
 
 Guidelines:
-    - Create 4-6 phases based on the timeline from start date to internship start date
-    - Include 8-15 specific, actionable tasks per phase with clear deadlines
-    - Tasks should be tailored to their technical level, target role, and available time
-    - Generate 20-30 relevant resources across all categories, prioritizing their target role
-    - Create 20-25 achievement badges with appropriate point values (25-500 points)
+- Create phases based on actual months from start date to internship start date
+- Each phase should represent 1-2 months of preparation
+- Include 8-15 specific, actionable tasks per phase with clear deadlines
+- Tasks must be tailored to their technical level, target role, and available weekly hours
+- Generate 20-30 relevant resources across all categories, prioritizing their target role
+- Create 20-25 achievement badges with appropriate point values (25-500 points)
 - Use appropriate Tailwind gradient colors for phases
-    - Make tasks specific, actionable, and time-bound
-    - Include resources relevant to their target role and preferred companies
-    - Consider their exam periods and academic schedule
-    - Account for their existing skills and what they need to learn
-    - Provide month-by-month progression that builds logically`;
+- Make tasks specific, actionable, and time-bound with actual dates
+- Include resources relevant to their target role and preferred companies
+- Consider their exam periods and academic schedule in task timing
+- Account for their existing skills and what they need to learn
+- Provide month-by-month progression that builds logically toward internship readiness
+- If they already have resume/LinkedIn, focus on optimization rather than creation
+- If they already have portfolio/GitHub, focus on enhancement and new projects
+- Adjust difficulty and pace based on available weekly hours`;
 
     const userPrompt = `User Profile:
-- Name: ${userData.name}
-- Education: ${userData.educationLevel} in ${userData.major}
-- Current Skills: ${userData.currentSkills.join(', ')}
-- Target Role: ${userData.targetRole}
-- Time Commitment: ${userData.timeCommitment}
-- Preferred Companies: ${userData.preferredCompanies.join(', ')}
-- Experience Level: ${userData.experience}
-- Goals: ${userData.goals.join(', ')}
+Based on the detailed questionnaire responses:
 
-    Additional Details:
-    - Start Date: ${userData.startDate || 'Not specified'}
-    - Target Internship Start: ${userData.internshipStartDate || 'Summer 2026'}
-    - Technical Level: ${userData.technicalLevel || 'Not specified'}
-    - Known Languages/Tools: ${userData.knownLanguages?.join(', ') || 'Not specified'}
-    - Specific Role: ${userData.specificRole || userData.targetRole}
-    - Target Companies: ${userData.targetCompanies?.join(', ') || userData.preferredCompanies.join(', ')}
-    - Weekly Hours Available: ${userData.weeklyHours || userData.timeCommitment}
-    - Exam Periods/Breaks: ${userData.examPeriods || 'Not specified'}
-    - Has Resume/LinkedIn: ${userData.hasResumeLinkedIn || 'Not specified'}
-    - Has Portfolio/GitHub: ${userData.hasPortfolioGitHub || 'Not specified'}
+1. Start preparation date: ${userData.startDate || 'Not specified'}
+2. Target internship start: ${userData.internshipStartDate || 'Summer 2026'}
+3. Current technical skill level: ${userData.technicalLevel || userData.experience || 'Not specified'}
+4. Known programming languages/tools: ${userData.knownLanguages?.join(', ') || userData.currentSkills?.join(', ') || 'Not specified'}
+5. Target role: ${userData.specificRole || userData.targetRole || 'Not specified'}
+6. Target companies/industries: ${userData.targetCompanies?.join(', ') || userData.preferredCompanies?.join(', ') || 'Not specified'}
+7. Weekly hours available: ${userData.weeklyHours || userData.timeCommitment || 'Not specified'}
+8. Exam periods/breaks: ${userData.examPeriods || 'Not specified'}
+9. Has resume and LinkedIn: ${userData.hasResumeLinkedIn || 'Not specified'}
+10. Has portfolio/GitHub: ${userData.hasPortfolioGitHub || 'Not specified'}
 
-    Generate a comprehensive, month-by-month personalized roadmap from their start date to their target internship start date. 
-    Make it highly specific to their current situation, skills, and goals.`;
+Additional context:
+- Name: ${userData.name || 'Not specified'}
+- Education: ${userData.educationLevel || 'Not specified'} in ${userData.major || 'Not specified'}
+- Goals: ${userData.goals?.join(', ') || 'Not specified'}
+
+Generate a comprehensive, month-by-month personalized roadmap from their start date to their target internship start date. 
+Make it highly specific to their current situation, skills, timeline, and goals. Each month should have clear, actionable tasks with specific deadlines.`;
 
     try {
       const response = await this.chatCompletion([
